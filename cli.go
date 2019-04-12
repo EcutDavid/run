@@ -22,22 +22,26 @@ func init() {
 	}
 }
 
+func createCmd(prog string, args ...string) *exec.Cmd {
+	cmd := exec.Command(prog, args...)
+	cmd.Stdout = os.Stdout
+	cmd.Stdin = os.Stdin
+	cmd.Stderr = os.Stderr
+	return cmd
+}
+
 func main() {
 	start := time.Now()
 
 	if strings.HasSuffix(fp, ".cpp") {
 		fmt.Println("Running cpp program")
 		fmt.Print("***********************\n\n")
-		cmd := exec.Command("g++", "-O2", "-Wall", "-std=c++11", fp, "-o", "cpp.out")
-		cmd.Stdout = os.Stdout
-		cmd.Stdin = os.Stdin
+		cmd := createCmd("g++", "-O2", "-Wall", "-std=c++11", fp, "-o", "cpp.out")
 		if err := cmd.Run(); err != nil {
 			log.Fatal(err)
 		}
 		start = time.Now()
-		cmd = exec.Command("./cpp.out")
-		cmd.Stdout = os.Stdout
-		cmd.Stdin = os.Stdin
+		cmd = createCmd("./cpp.out")
 		if err := cmd.Run(); err != nil {
 			log.Fatal(err)
 		}
@@ -45,9 +49,7 @@ func main() {
 	if strings.HasSuffix(fp, ".go") {
 		fmt.Println("Running go program, using \"go run\", so a little bit more time will be consumed")
 		fmt.Print("***********************\n\n")
-		cmd := exec.Command("go", "run", fp)
-		cmd.Stdout = os.Stdout
-		cmd.Stdin = os.Stdin
+		cmd := createCmd("go", "run", fp)
 		if err := cmd.Run(); err != nil {
 			log.Fatal(err)
 		}
