@@ -33,10 +33,10 @@ func createCmd(prog string, args ...string) *exec.Cmd {
 func main() {
 	start := time.Now()
 
-	if strings.HasSuffix(fp, ".cpp") {
+	if strings.HasSuffix(fp, ".cpp") || strings.HasSuffix(fp, ".cc") {
 		fmt.Println("Running cpp program")
 		fmt.Print("***********************\n\n")
-		cmd := createCmd("g++", "-O2", "-Wall", "-std=c++11", fp, "-o", "cpp.out")
+		cmd := createCmd("g++", "-O3", "-pthread", "-Wall", "-std=c++14", fp, "-o", "cpp.out")
 		if err := cmd.Run(); err != nil {
 			log.Fatal(err)
 		}
